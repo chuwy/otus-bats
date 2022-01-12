@@ -7,6 +7,6 @@ trait Semigroup[A] {
 object Semigroup {
 
   implicit val semigroupInt = new Semigroup[Int] {
-    override def combine(x: Int, y: Int): Int = x + y
+    override def combine(x: Int, y: Int): Int = ???
   }
 }
