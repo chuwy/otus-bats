@@ -1,7 +1,5 @@
 package me.chuwy.otusbats
 
-import cats.Mo
-
 trait Functor[F[_]] {
   def map[A, B](fa: F[A])(f: A => B): F[B]
 }
@@ -24,8 +22,6 @@ object Functor {
     }
 
   val e: Either[String, Int] = Right(3)
-
-  val a: Option[Int] = ???
 
   // val list = List(Some(1), None, Some(3))
   // list.map { option => option.map(f) }
