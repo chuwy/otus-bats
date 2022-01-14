@@ -5,26 +5,30 @@ trait Functor[F[_]] {
 }
 
 object Functor {
-  // 1. Instances
-  implicit val optionFunctor: Functor[Option] =
-    new Functor[Option] {
-      def map[A, B](fa: Option[A])(f: A => B): Option[B] =
-        ???
-    }
 
-  implicit val listFunctor: Functor[List] =
-    new Functor[List] {
-      def map[A, B](fa: List[A])(f: A => B): List[B] =
-        ???
-    }
+  // *
+  def a: Int = 3
 
-  def apply[F[_]](implicit ev: Functor[F]): Functor[F] = ev
+  // * -> *
+  def b(a: Int): Int = ???
 
-  // 2. Combinators
+  // (* -> *) -> *
+  def c(f: Int => Int): Int = ???
 
-  def nested[F[_]: Functor, G[_]: Functor, A, B](fga: F[G[A]])(f: A => B): F[G[B]] =
-    ???
+  // * -> * -> *
+  def d(a: Int, b: Int): Int = ???
 
-  /// NeFunctor
+
+  val example: Option[Int] = Some(10)
+  example.map(_ + 10)
+
+  case class NeFunctor[A](a: A, counter: Int)
+
+  implicit val neFunctorFunctor: Functor[NeFunctor] = new Functor[NeFunctor] {
+    def map[A, B](fa: NeFunctor[A])(f: A => B): NeFunctor[B] =
+      NeFunctor(f(fa.a), fa.counter + 1)
+  }
+
+  // a.map(f).map(indentity) === a.map(f)
 
 }

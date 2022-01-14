@@ -7,13 +7,7 @@ trait Show[A] {
 
 object Show {
 
-  // 1.1 Instances
-
-  implicit val stringShow: Show[String] =
-    ???
-
-  implicit val intShow: Show[Int] =
-    ???
+  // 1.1 Instances (`Int`, `String`, `Boolean`)
 
 
   // 1.2 Instances with conditional implicit
@@ -22,17 +16,32 @@ object Show {
     ???
 
 
-  // 2. Summoner
-
-  def apply[A](implicit ev: Show[A]): Show[A] = ev
+  // 2. Summoner (apply)
 
   // 3. Syntax extensions
 
   implicit class ShowOps[A](a: A) {
     def show(implicit ev: Show[A]): String =
       ???
+
+    /** Transform list of `A` into `String` with custom separator, beginning and ending.
+     *  For example: "[a, b, c]" from `List("a", "b", "c")`
+     *
+     *  @param separator. ',' in above example
+     *  @param begin. '[' in above example
+     *  @param end. ']' in above example
+     */
+    def mkString_(list: List[A], separator: String, begin: String, end: String)(implicit ev: Show[A]): String =
+      ???
+
   }
 
   // 4. Helper constructors
+
+  /** Just use JVM `toString` implementation, available on every object */
+  def fromJvm[A]: Show[A] = ???
+  
+  /** Provide a custom function to avoid `new Show { ... }` machinery */
+  def fromFunction[A](f: A => String): Show[A] = ???
 
 }
