@@ -24,17 +24,24 @@ object Show {
     def show(implicit ev: Show[A]): String =
       ???
 
-    /** Transform list of `A` into `String` with custom separator, beginning and ending.
-     *  For example: "[a, b, c]" from `List("a", "b", "c")`
-     *
-     *  @param separator. ',' in above example
-     *  @param begin. '[' in above example
-     *  @param end. ']' in above example
-     */
-    def mkString_(list: List[A], separator: String, begin: String, end: String)(implicit ev: Show[A]): String =
-      ???
+    def mkString_[B](begin: String, end: String, separator: String)(implicit S: Show[B], ev: A <:< List[B]): String = {
+      // with `<:<` evidence `isInstanceOf` is safe!
+      val casted: List[B] = a.asInstanceOf[List[B]]
+      Show.mkString_(casted, separator, begin, end)
+    }
 
   }
+
+  /** Transform list of `A` into `String` with custom separator, beginning and ending.
+   *  For example: "[a, b, c]" from `List("a", "b", "c")`
+   *
+   *  @param separator. ',' in above example
+   *  @param begin. '[' in above example
+   *  @param end. ']' in above example
+   */
+  def mkString_[A: Show](list: List[A], begin: String, end: String, separator: String): String =
+    ???
+
 
   // 4. Helper constructors
 
