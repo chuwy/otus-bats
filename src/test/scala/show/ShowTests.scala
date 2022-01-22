@@ -23,4 +23,22 @@ class ShowTests extends AnyFlatSpec {
       Show.mkString_(List(1, 2, 3), ", ", "{ ", " }") === "{ 1, 2, 3 }"
     )
   }
+
+  "Check from function" should "return proper string" in {
+    val fromFunvcList = fromFunction[List[Int]]((r) => r.toString)
+    val fromFunvcInt = fromFunction[Int]((r) => r.toString)
+      assert(
+        fromFunvcList.show(List(1, 2, 3)) === "List(1, 2, 3)"
+      )
+      assert(
+        fromFunvcInt.show(134) === "134"
+      )
+    }
+
+  "Check from function" should "return proper mkString" in {
+    val fromFunvcList = fromFunction[List[Int]]((r) => r.toString)
+    assert(
+      fromFunvcList.mkString_(List(1, 2, 3), ", ", "{ ", " }") === "{ 1, 2, 3 }"
+    )
+  }
 }

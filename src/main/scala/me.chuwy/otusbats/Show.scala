@@ -60,9 +60,13 @@ object Show {
   // 4. Helper constructors
 
   /** Just use JVM `toString` implementation, available on every object */
-  def fromJvm[A]: Show[A] = ???
+  def fromJvm[A]: Show[A] = new Show[A] {
+    def show(a: A): String = a.toString
+  }
   
   /** Provide a custom function to avoid `new Show { ... }` machinery */
-  def fromFunction[A](f: A => String): Show[A] = ???
+  def fromFunction[A](f: A => String): Show[A] = new Show[A] {
+    def show(a: A): String = f(a)
+  }
 
 }

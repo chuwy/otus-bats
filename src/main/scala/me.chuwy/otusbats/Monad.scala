@@ -18,5 +18,18 @@ object Monad {
     def point[A](a: A): Option[A] = Option(a)
     def flatten[A](fa: Option[Option[A]]): Option[A] = fa.flatMap(a => a.map(b => b))
   }
+
+  def from[F[_]](p: A => F[A], fm: (F[A], A => F[B]) => F[B]):  Monad[F] = new Monad[F] {
+    def map[A, B](fa: F[A])(f: A => B): F[B] = fm(fa, a => p(f(a)))
+    
+    def flatMap[A, B](fa: F[A])(f: A => F[B]): F[B] = fm(fa, f)
+    
+    def point[A](a: A): F[A] = p(a)
+    
+    def flatten[A](fa: F[F[A]]): F[A] = fm(fa, a => a.map(b => b))
+    
+  }
+
+  implicit def monadOption2: Monad[Option] = from[Option](a => Option(a), (a, f) => a.flatMap(f))
   
 }
