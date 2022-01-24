@@ -49,6 +49,22 @@ object Show {
     }
   }
 
+  /** Transform list of `A` into `String` with custom separator, beginning and ending.
+   *  For example: "[a, b, c]" from `List("a", "b", "c")`
+   *
+   *  @param separator. ',' in above example
+   *  @param begin. '[' in above example
+   *  @param end. ']' in above example
+   */
+  def mkString_[B: Show](list: List[B], separator: String, begin: String, end: String): String = {
+    list.zipWithIndex
+      .collect {
+        case (str, 0) => str.show
+        case (str, _) => separator + str.show
+      }
+      .foldLeft(begin)((elem, accum) => elem + accum) + end
+  }
+
   // 4. Helper constructors
 
   /** Just use JVM `toString` implementation, available on every object */
@@ -60,21 +76,4 @@ object Show {
   def fromFunction[A](f: A => String): Show[A] = new Show[A] {
     def show(a: A): String = f(a)
   }
-
-  /** Transform list of `A` into `String` with custom separator, beginning and
-    * ending. For example: "[a, b, c]" from `List("a", "b", "c")`
-    *
-    * @param separator. ',' in above example
-    * @param begin. '[' in above example
-    * @param end. ']' in above example
-    */
-  def mkString_[B: Show](list: List[B], separator: String, begin: String, end: String): String = {
-    list.zipWithIndex
-      .collect {
-        case (str, 0) => str.show
-        case (str, _) => separator + str.show
-      }
-      .foldLeft(begin)((elem, accum) => elem + accum) + end
-  }
-
 }
