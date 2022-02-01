@@ -13,14 +13,15 @@ class ShowTests extends AnyFlatSpec {
 
   "Check list of ints show" should "return proper string" in {
     assert(
-      List(1, 2, 3).show === "123"
+      List(1, 2, 3).show === "1, 2, 3"
     )
   }
-  // "Check list of ints mkString" should "return proper string" in {
-  //   assert(
-  //     List(1, 2, 3).mkString_(", ", "{ ", " }") === "{ 1, 2, 3 }"//This does not compile
-  //   )
-  // }
+
+  "Check list of ints mkString" should "return proper string" in {
+    assert(
+      List(1, 2, 3).mkString_[Int]("{ ", " }", ", ") === "{ 1, 2, 3 }"
+    )
+  }
 
   "Check from function" should "return proper string" in {
     val fromFunvcList = fromFunction[List[Int]]((r) => r.toString)
