@@ -8,21 +8,26 @@ trait Show[A] {
 object Show {
 
   // 1.1 Instances (`Int`, `String`, `Boolean`)
-
+  implicit val byteShow: Show[Byte] = v => String.valueOf(v)
+  implicit val shortShow: Show[Short] = v => String.valueOf(v)
+  implicit val intShow: Show[Int] = v => String.valueOf(v)
+  implicit val longShow: Show[Long] = v => String.valueOf(v)
+  implicit val booleanShow: Show[Boolean] = v => String.valueOf(v)
+  implicit val stringShow: Show[String] = v => v
 
   // 1.2 Instances with conditional implicit
 
-  implicit def listShow[A](implicit ev: Show[A]): Show[List[A]] =
-    ???
+  implicit def listShow[A](implicit ev: Show[A]): Show[List[A]] = v => v.map(_.show).mkString
+  implicit def setShow[A](implicit ev: Show[A]): Show[Set[A]] = v => v.map(_.show).mkString
 
 
   // 2. Summoner (apply)
+  def apply[A](implicit v: Show[A]): Show[A] = v
 
   // 3. Syntax extensions
 
   implicit class ShowOps[A](a: A) {
-    def show(implicit ev: Show[A]): String =
-      ???
+    def show(implicit ev: Show[A]): String = a.show
 
     def mkString_[B](begin: String, end: String, separator: String)(implicit S: Show[B], ev: A <:< List[B]): String = {
       // with `<:<` evidence `isInstanceOf` is safe!
@@ -40,15 +45,15 @@ object Show {
    *  @param end. ']' in above example
    */
   def mkString_[A: Show](list: List[A], begin: String, end: String, separator: String): String =
-    ???
+    list.map(_.show).mkString(begin, end, separator)
 
 
   // 4. Helper constructors
 
   /** Just use JVM `toString` implementation, available on every object */
-  def fromJvm[A]: Show[A] = ???
+  def fromJvm[A]: Show[A] = _.toString
   
   /** Provide a custom function to avoid `new Show { ... }` machinery */
-  def fromFunction[A](f: A => String): Show[A] = ???
+  def fromFunction[A](f: A => String): Show[A] = v => f(v)
 
 }
