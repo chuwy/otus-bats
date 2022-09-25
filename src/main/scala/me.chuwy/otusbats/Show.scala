@@ -8,17 +8,17 @@ trait Show[A] {
 object Show {
 
   // 1.1 Instances (`Int`, `String`, `Boolean`)
-  implicit val byteShow: Show[Byte] = v => String.valueOf(v)
-  implicit val shortShow: Show[Short] = v => String.valueOf(v)
-  implicit val intShow: Show[Int] = v => String.valueOf(v)
-  implicit val longShow: Show[Long] = v => String.valueOf(v)
-  implicit val booleanShow: Show[Boolean] = v => String.valueOf(v)
+  implicit val byteShow: Show[Byte] = v => s"$v"
+  implicit val shortShow: Show[Short] = v => s"$v"
+  implicit val intShow: Show[Int] = v => s"$v"
+  implicit val longShow: Show[Long] = v => s"$v"
+  implicit val booleanShow: Show[Boolean] = v => s"$v"
   implicit val stringShow: Show[String] = v => v
 
   // 1.2 Instances with conditional implicit
 
-  implicit def listShow[A](implicit ev: Show[A]): Show[List[A]] = v => v.map(_.show).mkString
-  implicit def setShow[A](implicit ev: Show[A]): Show[Set[A]] = v => v.map(_.show).mkString
+  implicit def listShow[A: Show]: Show[List[A]] = v => v.map(_.show).mkString(", ")
+  implicit def setShow[A: Show]: Show[Set[A]] = v => v.map(_.show).mkString(", ")
 
 
   // 2. Summoner (apply)
@@ -27,7 +27,7 @@ object Show {
   // 3. Syntax extensions
 
   implicit class ShowOps[A](a: A) {
-    def show(implicit ev: Show[A]): String = a.show
+    def show(implicit ev: Show[A]): String = ev.show(a)
 
     def mkString_[B](begin: String, end: String, separator: String)(implicit S: Show[B], ev: A <:< List[B]): String = {
       // with `<:<` evidence `isInstanceOf` is safe!
