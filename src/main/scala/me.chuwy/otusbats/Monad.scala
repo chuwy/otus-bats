@@ -5,9 +5,8 @@ trait Monad[F[_]] extends Functor[F] { self =>
 
   def point[A](a: A): F[A]
 
-  def flatten[A](fa: F[F[A]]): F[A]
+  def flatten[A](fa: F[F[A]]): F[A] 
 }
 
 object Monad {
-
 }

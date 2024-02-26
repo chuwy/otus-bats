@@ -5,7 +5,7 @@ trait Semigroup[A] {
 }
 
 
-object Semigroup {
+object Semigroup{
 
 
   def apply[A](implicit ev: Semigroup[A]): Semigroup[A] = ev
@@ -18,9 +18,14 @@ object Semigroup {
     override def combine(x: String, y: String): String = x ++ y
   }
 
-  def double[A: Semigroup](a: A): A =
-    Semigroup[A].combine(a, a)
+  def double[A: Semigroup](a: A, b:A): A =
+    Semigroup[A].combine(a, b)
 
-  double("foo")
+}
 
+object SemigroupEx extends App{
+  import Semigroup._
+
+  val rs = double("foo","ss")
+  println(rs)
 }
